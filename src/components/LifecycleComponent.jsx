@@ -5,6 +5,8 @@ import { Col, Row } from 'antd'
 export default function LifecycleComponent() {
   const [restoresCount, setRestoresCount] = useState(0)
   const [images, setImages] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [inputValue, setInputValue] = useState(3)
 
   async function fetchImages() {
@@ -17,15 +19,16 @@ export default function LifecycleComponent() {
       }
       const data = await response.json()
       setImages(data.message)
+      setLoading(false)
     } catch (e) {
-      setError(e.message)
+      setError(e)
+      setLoading(false)
       console.error('Ошибка при загрузке изображений:', e)
     }
   }
 
   function handleInputChange(event) {
     setInputValue(event.target.value)
-    console.log(event.target.value)
   }
 
   function restore() {
@@ -36,6 +39,14 @@ export default function LifecycleComponent() {
   useEffect(() => {
     fetchImages()
   }, [])
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>
+  }
 
   return (
     <div>
