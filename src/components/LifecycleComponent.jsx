@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Card from './Card'
 import { Col, Row } from 'antd'
-
 export default function LifecycleComponent() {
   const [restoresCount, setRestoresCount] = useState(0)
   const [images, setImages] = useState([])
