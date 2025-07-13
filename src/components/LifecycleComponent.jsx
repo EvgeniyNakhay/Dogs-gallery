@@ -8,7 +8,7 @@ export default function LifecycleComponent() {
   const [error, setError] = useState(null)
   const [inputValue, setInputValue] = useState(3)
   const [allBreedsList, setAllBreedsList] = useState(null)
-  const [selectedBreed, setSelectedBreed] = useState('')
+  const [selectedBreed, setSelectedBreed] = useState('Random breed')
 
   async function fetchImages() {
     try {
@@ -45,7 +45,7 @@ export default function LifecycleComponent() {
   async function fetchImagesbySelectedBreed() {
     try {
       const response = await fetch(
-        `https://dog.ceo/api/${selectedBreed}/image/random/${inputValue}`
+        `https://dog.ceo/api/breed/${selectedBreed}/images/random/${inputValue}`
       )
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
@@ -71,16 +71,13 @@ export default function LifecycleComponent() {
 
   function selectBreed(event) {
     setSelectedBreed(event.target.value)
+    fetchImagesbySelectedBreed()
   }
 
   useEffect(() => {
     fetchImages()
     getAllBreeds()
   }, [])
-
-  //   useEffect(() => {
-  //     fetchImagesbySelectedBreed()
-  //   }, [selectedBreed])
 
   if (loading) {
     return <p>Loading...</p>
@@ -97,7 +94,7 @@ export default function LifecycleComponent() {
       <label>
         Порода:
         <select value={selectedBreed} onChange={selectBreed}>
-          <option disabled>Выберите...</option>
+          <option disabled>{selectedBreed}</option>
           {allBreedsList.map((item) => (
             <option value={item}>{item}</option>
           ))}
