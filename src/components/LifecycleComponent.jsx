@@ -8,7 +8,7 @@ export default function LifecycleComponent() {
   const [error, setError] = useState(null)
   const [inputValue, setInputValue] = useState(3)
   const [allBreedsList, setAllBreedsList] = useState(null)
-  const [selectedBreed, setSelectedBreed] = useState('Все породы')
+  const [selectedBreed, setSelectedBreed] = useState('all')
 
   async function fetchImages() {
     try {
@@ -44,7 +44,8 @@ export default function LifecycleComponent() {
 
   async function fetchImagesbySelectedBreed() {
     try {
-      console.log('запрос')
+      console.log(selectedBreed)
+      console.log(inputValue)
       const response = await fetch(
         `https://dog.ceo/api/breed/${selectedBreed}/images/random/${inputValue}`
       )
@@ -66,7 +67,11 @@ export default function LifecycleComponent() {
   }
 
   function restore() {
-    fetchImages()
+    if (selectedBreed === 'all') {
+      fetchImages()
+    } else {
+      fetchImagesbySelectedBreed()
+    }
     setRestoresCount((restoresCount) => restoresCount + 1)
   }
 
@@ -80,9 +85,12 @@ export default function LifecycleComponent() {
   }, [])
 
   useEffect(() => {
-    console.log('request')
-    // fetchImagesbySelectedBreed()
-  }, [selectBreed])
+    if (selectedBreed === 'all') {
+      fetchImages(inputValue)
+    } else {
+      fetchImagesbySelectedBreed(selectedBreed)
+    }
+  }, [selectedBreed])
 
   if (loading) {
     return <p>Loading...</p>
